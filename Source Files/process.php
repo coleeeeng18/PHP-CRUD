@@ -4,10 +4,11 @@ session_start();
 
 $mysqli = new mysqli('localhost', 'root', '12345', 'crud') or die(mysqli_error($mysqli));
 
-$id = 0;
-$update = false;
+
 $name = '';
 $location = '';
+$update = false;
+$id = 0;
 
 if (isset($_POST['save'])){
     $name = $_POST['name'];
@@ -32,16 +33,16 @@ if (isset($_GET['delete'])){
     header("location: index.php");
 }
 
-if (isset($GET['edit'])){
+if (isset($_GET['edit'])){
     $id = $_GET['edit'];
     $update = true;
     $result = $mysqli->query("SELECT * FROM data WHERE id=$id") or die($mysqli->error());
-
-    if (count($result)==1){
-        $row = $result->fetch_array();
-        $name = $row['name'];
-        $location = $row['location'];
-    }
+        if (@count($result)==1)
+        {
+            $row = $result->fetch_array();
+            $name = $row['name'];
+            $location = $row['location'];
+        }
 }
 
 if (isset($_POST['update'])){
@@ -49,10 +50,11 @@ if (isset($_POST['update'])){
     $name = $_POST['name'];
     $location = $_POST['location'];
 
-    $mysqli->query("UPDATE data SET name='$name', location='location' WHERE id=$id") or
-        die($mysqli->error);
-        $_SESSION['message'] = "Record has been updated!";
-        $_SESSION['msg_type'] = "warning";
+    $mysqli->query("UPDATE data SET name='$name', location='$location' WHERE id=$id")
+        or die($mysqli->error);
 
-        header('location: index.php');
+    $_SESSION['message'] = "Record has been updated!";
+    $_SESSION['msg_type'] = "warning";
+
+    header("location: index.php");
 }
